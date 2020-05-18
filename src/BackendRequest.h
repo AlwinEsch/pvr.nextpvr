@@ -10,6 +10,7 @@
 
 #include "Settings.h"
 #include "client.h"
+#include <kodi/Filesystem.h>
 #include "p8-platform/threads/mutex.h"
 
 #include <ctime>
@@ -20,7 +21,7 @@
 #define HTTP_NOTFOUND 404
 #define HTTP_BADREQUEST 400
 
-using namespace ADDON;
+
 
 namespace NextPVR
 {
@@ -39,7 +40,7 @@ namespace NextPVR
     int FileCopy(const char* resource, std::string fileName);
     void setSID(char* newsid) { strcpy(m_sid, newsid); };
     bool PingBackend();
-    bool OneTimeSetup(void* hdl);
+    bool OneTimeSetup();
     const char* getSID() { return m_sid; };
     std::vector<std::vector<std::string>> Discovery();
 

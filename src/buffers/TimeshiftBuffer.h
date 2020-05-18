@@ -61,12 +61,12 @@ namespace timeshift {
       return true;
     }
 
-    virtual int64_t Position() const override
+    virtual int64_t Position() override
     {
       return m_sd.streamPosition.load();  // very approximate
     }
 
-    virtual int64_t Length() const override
+    virtual int64_t Length() override
     {
       return m_sd.lastKnownLength.load();
     }
@@ -78,8 +78,8 @@ namespace timeshift {
       return false;
     }
 
-    virtual PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *) override;
-    virtual PVR_ERROR GetStreamReadChunkSize(int *chunksize) override;
+    virtual PVR_ERROR TimeshiftBuffer::GetStreamTimes(kodi::addon::PVRStreamTimes& stimes) override;
+    virtual PVR_ERROR GetStreamReadChunkSize(int& chunksize) override;
 
   private:
 

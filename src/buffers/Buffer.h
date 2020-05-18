@@ -8,6 +8,8 @@
  */
 
 #pragma once
+#include "../client.h"
+#include <kodi/addon-instance/PVR.h>
 
 #if defined(TARGET_WINDOWS)
   #include <windows.h>
@@ -47,8 +49,8 @@ namespace timeshift {
   {
   public:
     Buffer() :
-      m_active(false), m_inputHandle(nullptr), m_startTime(0),
-      m_readTimeout(DEFAULT_READ_TIMEOUT) {XBMC->Log(LOG_INFO, "Buffer created!"); };
+      m_active(false), m_startTime(0),
+      m_readTimeout(DEFAULT_READ_TIMEOUT) {kodi::Log(ADDON_LOG_INFO, "Buffer created!"); };
     virtual ~Buffer();
 
     NextPVR::Settings& m_settings = NextPVR::Settings::GetInstance();
@@ -103,12 +105,12 @@ namespace timeshift {
     /**
      * @return the current read position
      */
-    virtual int64_t Position() const = 0;
+    virtual int64_t Position() = 0;
 
     /**
      * @return the current length of the buffer
      */
-    virtual int64_t Length() const = 0;
+    virtual int64_t Length() = 0;
 
     virtual bool IsTimeshifting() const
     {
@@ -125,12 +127,12 @@ namespace timeshift {
     /**
      * @return stream times
      */
-    virtual PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *stimes)
+    virtual PVR_ERROR GetStreamTimes(kodi::addon::PVRStreamTimes& stimes)
     {
-      stimes->startTime = m_startTime;
-      stimes->ptsStart = 0;
-      stimes->ptsBegin = 0;
-      stimes->ptsEnd = 0;
+      stimes.SetStartTime(m_startTime);
+      stimes.SetPTSStart(0);
+      stimes.SetPTSBegin(0);
+      stimes.SetPTSEnd(0);
       return PVR_ERROR_NO_ERROR;
     }
 
@@ -138,9 +140,9 @@ namespace timeshift {
      * The time the buffer was created
      */
 
-    virtual PVR_ERROR GetStreamReadChunkSize(int* chunksize)
+    virtual PVR_ERROR GetStreamReadChunkSize(int& chunksize)
     {
-      *chunksize = 16 * 1024;
+      chunksize = 16 * 1024;
       return PVR_ERROR_NO_ERROR;
     }
 
@@ -187,12 +189,12 @@ namespace timeshift {
      * Safely closes an open file handle.
      * @param the handle to close. The pointer will be nulled.
      */
-    void CloseHandle(void *&handle);
+    void CloseHandle(kodi::vfs::CFile& handle);
 
     /**
      * The input handle (where data is read from)
      */
-    void *m_inputHandle;
+    kodi::vfs::CFile m_inputHandle;
 
     /**
      * The time (in seconds) to wait when opening a read handle and when

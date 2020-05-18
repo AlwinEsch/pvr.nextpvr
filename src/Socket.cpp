@@ -6,7 +6,6 @@
  *  See LICENSE.md for more information.
  */
 
-#include "kodi/libXBMC_addon.h"
 #include <string>
 #include "p8-platform/os.h"
 #include "p8-platform/util/timeutils.h"
@@ -14,7 +13,7 @@
 #include "Socket.h"
 
 using namespace std;
-using namespace ADDON;
+
 using namespace NextPVR;
 
 namespace NextPVR
@@ -243,7 +242,7 @@ int Socket::send ( const char* data, const unsigned int len )
 
   if (result < 0)
   {
-    XBMC->Log(LOG_ERROR, "Socket::send  - select failed");
+    kodi::Log(ADDON_LOG_ERROR, "Socket::send  - select failed");
     _sd = INVALID_SOCKET;
     return 0;
   }
@@ -258,7 +257,7 @@ int Socket::send ( const char* data, const unsigned int len )
   if (status == SOCKET_ERROR)
   {
     errormessage( getLastError(), "Socket::send");
-    XBMC->Log(LOG_ERROR, "Socket::send  - failed to send data");
+    kodi::Log(ADDON_LOG_ERROR, "Socket::send  - failed to send data");
     _sd = INVALID_SOCKET;
   }
   return status;
@@ -362,7 +361,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
 
     if (result < 0)
     {
-      XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - select failed");
+      kodi::Log(ADDON_LOG_DEBUG, "CVTPTransceiver::ReadResponse - select failed");
       lines.push_back("ERROR: Select failed");
       code = 1; //error
       _sd = INVALID_SOCKET;
@@ -373,11 +372,11 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     {
       if (retries != 0)
       {
-         XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - timeout waiting for response, retrying... (%i)", retries);
+         kodi::Log(ADDON_LOG_DEBUG, "CVTPTransceiver::ReadResponse - timeout waiting for response, retrying... (%i)", retries);
          retries--;
         continue;
       } else {
-         XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - timeout waiting for response. Failed after 10 retries.");
+         kodi::Log(ADDON_LOG_DEBUG, "CVTPTransceiver::ReadResponse - timeout waiting for response. Failed after 10 retries.");
          lines.push_back("ERROR: Failed after 10 retries");
          code = 1; //error
         _sd = INVALID_SOCKET;
@@ -388,7 +387,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     result = recv(_sd, buffer, sizeof(buffer) - 1, 0);
     if (result < 0)
     {
-      XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - recv failed");
+      kodi::Log(ADDON_LOG_DEBUG, "CVTPTransceiver::ReadResponse - recv failed");
       lines.push_back("ERROR: Recv failed");
       code = 1; //error
       _sd = INVALID_SOCKET;
@@ -447,7 +446,7 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
       }
       else
       {
-        XBMC->Log(LOG_ERROR, "Socket::read EAGAIN");
+        kodi::Log(ADDON_LOG_ERROR, "Socket::read EAGAIN");
         usleep(50000);
         continue;
       }
@@ -484,7 +483,7 @@ bool Socket::connect ( const std::string& host, const unsigned short port )
 
   if ( !setHostname( host ) )
   {
-    XBMC->Log(LOG_ERROR, "Socket::setHostname(%s) failed.\n", host.c_str());
+    kodi::Log(ADDON_LOG_ERROR, "Socket::setHostname(%s) failed.\n", host.c_str());
     return false;
   }
 
@@ -492,7 +491,7 @@ bool Socket::connect ( const std::string& host, const unsigned short port )
 
   if ( status == SOCKET_ERROR )
   {
-    XBMC->Log(LOG_ERROR, "Socket::connect %s:%u\n", host.c_str(), port);
+    kodi::Log(ADDON_LOG_ERROR, "Socket::connect %s:%u\n", host.c_str(), port);
     errormessage( getLastError(), "Socket::connect" );
     return false;
   }
@@ -561,7 +560,7 @@ bool Socket::set_non_blocking ( const bool b )
 
   if (ioctlsocket(_sd, FIONBIO, &iMode) == -1)
   {
-    XBMC->Log(LOG_ERROR, "Socket::set_non_blocking - Can't set socket condition to: %i", iMode);
+    kodi::Log(ADDON_LOG_ERROR, "Socket::set_non_blocking - Can't set socket condition to: %i", iMode);
     return false;
   }
 
@@ -652,7 +651,7 @@ void Socket::errormessage( int errnum, const char* functionname) const
   default:
     errmsg = "WSA Error";
   }
-  XBMC->Log(LOG_ERROR, "%s: (Winsock error=%i) %s\n", functionname, errnum, errmsg);
+  kodi::Log(ADDON_LOG_ERROR, "%s: (Winsock error=%i) %s\n", functionname, errnum, errmsg);
 }
 
 int Socket::getLastError() const
@@ -710,7 +709,7 @@ bool Socket::set_non_blocking ( const bool b )
 
   if(fcntl (_sd , F_SETFL, opts) == -1)
   {
-    XBMC->Log(LOG_ERROR, "Socket::set_non_blocking - Can't set socket flags to: %i", opts);
+    kodi::Log(ADDON_LOG_ERROR, "Socket::set_non_blocking - Can't set socket flags to: %i", opts);
     return false;
   }
   return true;
@@ -782,7 +781,7 @@ void Socket::errormessage( int errnum, const char* functionname) const
     default:
       break;
   }
-  XBMC->Log(LOG_ERROR, "%s: (errno=%i) %s\n", functionname, errnum, errmsg);
+  kodi::Log(ADDON_LOG_ERROR, "%s: (errno=%i) %s\n", functionname, errnum, errmsg);
 }
 
 int Socket::getLastError() const
