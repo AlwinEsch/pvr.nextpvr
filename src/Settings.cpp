@@ -215,10 +215,10 @@ void Settings::SetVersionSpecificSettings()
       m_sendSidWithMetadata = true;
     }
 
-    if (kodi::CheckSettingBoolean("guideartworkportrait", m_guideArtPortrait))
+    if (!kodi::CheckSettingBoolean("guideartworkportrait", m_guideArtPortrait))
       m_guideArtPortrait = false;
 
-    if (kodi::CheckSettingBoolean("recordingsize", m_showRecordingSize))
+    if (!kodi::CheckSettingBoolean("recordingsize", m_showRecordingSize))
       m_showRecordingSize = false;
   }
   else
