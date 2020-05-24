@@ -504,9 +504,9 @@ void cPVRClientNextPVR::CloseLiveStream(void)
 }
 
 
-long long cPVRClientNextPVR::SeekLiveStream(long long iPosition, int iWhence)
+int64_t cPVRClientNextPVR::SeekLiveStream(int64_t iPosition, int iWhence)
 {
-  long long retVal;
+  int64_t retVal;
   kodi::Log(ADDON_LOG_DEBUG, "calling seek(%lli %d)", iPosition, iWhence);
   retVal = m_livePlayer->Seek(iPosition, iWhence);
   kodi::Log(ADDON_LOG_DEBUG, "returned from seek()");
@@ -514,7 +514,7 @@ long long cPVRClientNextPVR::SeekLiveStream(long long iPosition, int iWhence)
 }
 
 
-long long cPVRClientNextPVR::LengthLiveStream(void)
+int64_t cPVRClientNextPVR::LengthLiveStream(void)
 {
   kodi::Log(ADDON_LOG_DEBUG, "seek length(%lli)", m_livePlayer->Length());
   return m_livePlayer->Length();
@@ -585,12 +585,12 @@ int cPVRClientNextPVR::ReadRecordedStream(unsigned char* pBuffer, unsigned int i
   return iBufferSize;
 }
 
-long long cPVRClientNextPVR::SeekRecordedStream(long long iPosition, int iWhence)
+int64_t cPVRClientNextPVR::SeekRecordedStream(int64_t iPosition, int iWhence)
 {
   return m_recordingBuffer->Seek(iPosition, iWhence);
 }
 
-long long cPVRClientNextPVR::LengthRecordedStream(void)
+int64_t cPVRClientNextPVR::LengthRecordedStream(void)
 {
   return m_recordingBuffer->Length();
 }

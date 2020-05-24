@@ -95,6 +95,6 @@ namespace timeshift {
 
     virtual bool GetStreamInfo();
 
-    virtual PVR_ERROR RollingFile::GetStreamTimes(kodi::addon::PVRStreamTimes& times) override;
+    virtual PVR_ERROR GetStreamTimes(kodi::addon::PVRStreamTimes& times) override;
   };
 }

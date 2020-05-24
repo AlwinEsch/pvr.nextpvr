@@ -53,7 +53,7 @@ namespace timeshift {
       return false;
     }
 
-    PVR_ERROR RecordingBuffer::GetStreamTimes(kodi::addon::PVRStreamTimes& stimes) override;
+    PVR_ERROR GetStreamTimes(kodi::addon::PVRStreamTimes& stimes) override;
 
     virtual int64_t Length() override
     {
